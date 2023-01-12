@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
-
 use Illuminate\Support\Facades\URL;
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +15,16 @@ use Illuminate\Support\Facades\URL;
 |
 */
 
-Route::get('/', [FrontController::class, 'index']);
+
+
+
+
+
+// Route::get('/', [FrontController::class, 'index']);
 Route::get('/{any}', [FrontController::class, 'index'])->where('any', '.*');
+
+
+
+
+
+// Route::get('/', [FrontController::class, 'showview']);

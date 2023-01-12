@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_addresses', function (Blueprint $table) {
+        Schema::create('uploads', function (Blueprint $table) {
             $table->id();
-            $table->string('address');
-            $table->integer('zipcode');
-            $table->string('sub_district');
-            $table->string('district');
-            $table->string('city');
-            $table->string('contry');
+            $table->string('orginal_name');
+            $table->string('storage_path');
+            $table->string('view_path');
+            $table->string('file_size');
+            $table->string('file_extesion');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_addresses');
+        Schema::dropIfExists('uploads');
     }
-};
+}; 

@@ -1,29 +1,84 @@
+<script setup>
+	import Spinner from '@/components/Spinner.vue'
+</script>
 <template>
-	<header>
-		<router-link to="/">Home</router-link>
-		<router-link to="/about">About</router-link>
-	</header>
-	<main>
-		<router-view></router-view>
-	</main>
+	<section>
+		<Spinner />
+		<header class="container bg-light box_shadow_100 rounded">
+			<nav class="navbar navbar-expand-lg">
+			  <div class="container-fluid">
+			    <a class="navbar-brand" href="#">DevBipu</a>
+			    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			      <span class="navbar-toggler-icon"></span>
+			    </button>
+			    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			      <ul class="navbar-nav">
+			        <li class="nav-item">
+			        	<router-link class="nav-link" to="/">Home</router-link>
+			        </li>
+			        <li class="nav-item">
+			        	<router-link class="nav-link" to="/about">About </router-link>
+			        </li>
+			        <li class="nav-item" v-if="!loginToken">
+			        	<router-link class="nav-link" to="/login">Login</router-link>
+			        </li>
+			        <li class="nav-item" v-if="!loginToken">
+			        	<router-link class="nav-link" to="/register">Register</router-link>
+			        </li>
+			        <li class="nav-item">
+			        	<router-link class="nav-link" :to="{name: 'Dashboard'}">Dashboard</router-link>
+			        </li>
+			      </ul>
+			    </div>
+			  </div>
+			</nav>
+		</header>
+		<main>
+			<router-view v-slot="{ Component, route }"  :key="$store.getters.getCompKey">
+			  <transition :name="route.meta.transitionName || 'fade'" mode="out-in">
+			    <component :is="Component" :key="$route.path"/>
+			  </transition>
+			</router-view>
+		</main>
+	</section>
 </template>
 
+<script>
+	// import { computed } from 'vue';
+    import { useStore } from 'vuex';
+	export default{
+		setup(){
+			const store = useStore();
+			const loginToken = () => {
+				return store.getters.getToken != 0 ? true : false;
+			};
+			console.log("recompiled")
+			return {
+				loginToken,
+				//store
+			}
+		}
+	}
+</script>
 
 <style>
-	*{
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-	header a{
-		display: inline-block;
-		padding: 0 10px;
-		text-decoration: none;
-	}
-	header a.router-link-active{
-		text-decoration: underline;
-	}
 	main{
-		padding: 10px;
+		padding: 20px;
 	}
+	.box_shadow_100{
+		box-shadow: 0 0.125rem 0.55rem rgb(0 0 0 / 21%)
+	}
+	.active{
+		font-weight: 500 !important;
+		color: black !important;
+		text-decoration: underline !important;
+	}
+	/* Router animation */
+	.fade-leave-to, .fade-enter-form{
+        opacity: .1;
+	}
+	.fade-leave-active, .fade-enter-active{
+		transition: opacity .2s;
+	}
+
 </style>

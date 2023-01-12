@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // get user image
+    public function avatar(){
+        return $this->belongsTo('App\Models\Upload', 'upload_id');
+    }
 }

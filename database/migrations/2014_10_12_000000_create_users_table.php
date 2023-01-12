@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('dp')->default('https://cdn-icons-png.flaticon.com/512/1077/1077063.png');
-            $table->string('user_addresses_id')->nullable();
+            $table->integer('upload_id')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

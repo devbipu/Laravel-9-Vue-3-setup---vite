@@ -8,8 +8,16 @@ use Illuminate\Support\Facades\URL;
  
 class FrontController extends Controller
 {
-    public function index(Request $request)
-    {
-       return view('index');
-    }
+   public function index(Request $request)
+   {
+    return view('index');
+   }
+
+
+
+   public function showview(Request $req)
+   {
+      
+      return view('welcome');
+   }
 }
