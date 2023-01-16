@@ -2,7 +2,7 @@ import './bootstrap';
 import { createApp } from 'vue';
 import router from './router';
 import store from './store/index.js';
-import app from './App.vue'
+import App from './App.vue'
 // Import our custom CSS
 import '../css/app.scss'
 
@@ -14,7 +14,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import GlobalMethods from './common.js'
 
 
-const vueApp = createApp(app)
+const vueApp = createApp(App)
 
 router.beforeEach((to, form) => {
 	store.dispatch('setLoading', true)

@@ -1,8 +1,7 @@
 <template>
 	<div>
-		<div class="my-2">
-			<button class="btn btn-sm btn-danger" @click="bulkDeletes()">Delete All</button> &nbsp;
-			<button class="btn btn-sm btn-secondary">Check All</button>
+		<div class="my-2" v-if="images.length">
+			<button class="btn btn-sm btn-danger" @click="bulkDeletes()">Delete Selected Item</button> &nbsp;
 		</div>
 		<div class="row g-3" :key="re_render">
 			<div class="col-md-3" v-for="img in images">
@@ -24,7 +23,7 @@
 		                </div>
 		            </div>
 		            <video v-if="img.file_extesion == 'mp4' " class="w-100" :src="img.view_path" controls></video>
-		            <img v-else :src="img.view_path" class="w-100">
+		            <img v-else :src="img.view_path" class="w-100 images">
 		            <div class="mt-1">
 		                <h6 class="mb-0">{{img.orginal_name}}</h6>
 		                <span class="text-muted">{{ (img.file_size / (1024 * 1024)).toFixed(2) }} MB</span>
@@ -93,6 +92,7 @@
         border-radius: 3px;
         position: relative;
         overflow: hidden;
+            min-height: 245px;
     }
 
     .gallery_tools_wrap .gallery_tools_inner {
@@ -128,4 +128,9 @@
         display: block;
     }
     .gallery_tools_wrap.show_tools .tools_triger {background: #21ff98;border-radius: 5px;}
+
+    .gallery_img_wrapper img.images{
+    	height: 200px;
+    	object-fit: contain;
+    }
 </style>

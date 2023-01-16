@@ -19,13 +19,13 @@
 			        <li class="nav-item">
 			        	<router-link class="nav-link" to="/about">About </router-link>
 			        </li>
-			        <li class="nav-item" v-if="!loginToken">
+			        <li class="nav-item" v-if="$store.getters.getToken == 0 ">
 			        	<router-link class="nav-link" to="/login">Login</router-link>
 			        </li>
-			        <li class="nav-item" v-if="!loginToken">
+			        <li class="nav-item" v-if="$store.getters.getToken == 0 ">
 			        	<router-link class="nav-link" to="/register">Register</router-link>
 			        </li>
-			        <li class="nav-item">
+			        <li class="nav-item" v-else>
 			        	<router-link class="nav-link" :to="{name: 'Dashboard'}">Dashboard</router-link>
 			        </li>
 			      </ul>
@@ -49,8 +49,10 @@
 	export default{
 		setup(){
 			const store = useStore();
-			const loginToken = () => {
-				return store.getters.getToken != 0 ? true : false;
+			const loginToken = function() {
+				// return true;
+				console.log(store.getters.getToken)
+				return store.getters.getToken == 0 ? false : true ;
 			};
 			console.log("recompiled")
 			return {
