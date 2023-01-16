@@ -128,7 +128,10 @@
                     avtImg.value = uploadStatus.data.FileName;
                     imgInfo.uploadStatus = true;
                     store.dispatch('setLoading', false)
+                    __notify('File Uploaded Successfully')
+                    console.log(uploadStatus);
                 }).catch((er) => {
+                    __notify("File Not Uploaded", '', 'error')
                     store.dispatch('setLoading', false)
                     console.log(er);
                 })

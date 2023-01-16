@@ -1,37 +1,43 @@
 <template>
-	<div class="row g-3" :key="re_render">
-		<div class="col-md-3" v-for="img in images">
-	        <div class="gallery_img_wrapper">
-	            <div class="gallery_tools_wrap">
-	                <div class="gallery_tools_inner">
-	                    <input type="checkbox" class="form-check-input" :img_id="img.id">
-	                    <span class="tools_triger">
-	                        <img src="/assets/28-info-outline.webp" width="30" @click="gToolShow">
-	                    </span>
-	                </div>
-	                <div class="tools">
-	                    <div class="list-group">
-	                        <button type="button" class="list-group-item list-group-item-action">Info</button>
-	                        <button type="button" class="list-group-item list-group-item-action" @click="deleteFile(img.id)">Delete</button>
-	                        <button type="button" class="list-group-item list-group-item-action">Download</button>
-	                        <button type="button" class="list-group-item list-group-item-action">Copy Link</button>
-	                    </div>
-	                </div>
-	            </div>
-	            <video v-if="img.file_extesion == 'mp4' " class="w-100" :src="img.view_path" controls></video>
-	            <img v-else :src="img.view_path" class="w-100">
-	            <div class="mt-1">
-	                <h6 class="mb-0">{{img.orginal_name}}</h6>
-	                <span class="text-muted">{{ (img.file_size / (1024 * 1024)).toFixed(2) }} MB</span>
-	            </div>
-	        </div>
-	    </div>
+	<div>
+		<div class="my-2">
+			<button class="btn btn-sm btn-danger" @click="bulkDeletes()">Delete All</button> &nbsp;
+			<button class="btn btn-sm btn-secondary">Check All</button>
+		</div>
+		<div class="row g-3" :key="re_render">
+			<div class="col-md-3" v-for="img in images">
+		        <div class="gallery_img_wrapper">
+		            <div class="gallery_tools_wrap">
+		                <div class="gallery_tools_inner">
+		                    <input type="checkbox" class="form-check-input" v-model="fileIds" :value="img.id">
+		                    <span class="tools_triger">
+		                        <img src="/assets/28-info-outline.webp" width="30" @click="gToolShow">
+		                    </span>
+		                </div>
+		                <div class="tools">
+		                    <div class="list-group">
+		                        <button type="button" class="list-group-item list-group-item-action">Info</button>
+		                        <button type="button" class="list-group-item list-group-item-action" @click="deleteFile(img.id)">Delete</button>
+		                        <button type="button" class="list-group-item list-group-item-action">Download</button>
+		                        <button type="button" class="list-group-item list-group-item-action">Copy Link</button>
+		                    </div>
+		                </div>
+		            </div>
+		            <video v-if="img.file_extesion == 'mp4' " class="w-100" :src="img.view_path" controls></video>
+		            <img v-else :src="img.view_path" class="w-100">
+		            <div class="mt-1">
+		                <h6 class="mb-0">{{img.orginal_name}}</h6>
+		                <span class="text-muted">{{ (img.file_size / (1024 * 1024)).toFixed(2) }} MB</span>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 	</div>
 </template>
 
 <script>
-	import { ref, defineComponent } from 'vue';
-	import { callApi, callApi__CFR  } from '@/composables';
+	import { ref, computed, defineComponent } from 'vue';
+	import { callApi, callApi__CFR, __notify  } from '@/composables';
     import { useStore } from 'vuex';
 	export default defineComponent({
 		name: "Gallery-Single",
@@ -44,17 +50,35 @@
 		setup(props){
 			const re_render = ref(0);
 			const store = useStore();
+			const fileIds = ref([]);
             const gToolShow = (e) => {
                 e.target.parentNode.parentNode.parentNode.classList.toggle('show_tools');
             }
 
             const deleteFile =  async (id) => {
             	const res = await callApi__CFR('post', '/api/deletefile', {fileId: id});
+            	if (res.status) {
+            		__notify("File Deleted Successfully")
+            	}else{
+            		__notify("File Not Deleted", '', 'error')
+            	}
             }
+
+            //Bulk delete
+            const bulkDeletes = async () => {
+            	const res = await callApi__CFR('post', '/api/bulkdeletes', {ids: fileIds.value});
+            	if (res.status) {
+            		__notify("File Deleted Successfully")
+            	}else{
+            		__notify("File Not Deleted", '', 'error')
+            	}
+            };
             return {
             	gToolShow,
             	deleteFile,
             	re_render,
+            	fileIds,
+            	bulkDeletes,
             	images: props.asyncData,
             }
 		}

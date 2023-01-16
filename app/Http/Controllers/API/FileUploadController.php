@@ -14,7 +14,8 @@ class FileUploadController extends Controller
     public function uploadFile(Request $req)
     {
         $file = $req->file('img');
-        $fName = time().'_'.$file->getClientOriginalName();
+        $formatedName = preg_replace('/\s+|[^A-Za-z0-9 ]/', '_', $file->getClientOriginalName());
+        $fName = time().'_'.$formatedName;
         $upPath = "image/".date('Y')."/".date('m');
         $store = $file->storeAs("public/".$upPath, $fName);
         $viewPath = '/storage/'.$upPath.'/'.$fName;
@@ -76,5 +77,30 @@ class FileUploadController extends Controller
             'db_deleted_status'    => $db_deleted,
             'file_deleted_status'    => $file_deleted,
         ]);
+    }
+
+    /**
+     * bulkDeleteFile images from database & files
+     * Return response as json formate 
+     */
+
+    public function bulkDeleteFile(Request $req)
+    {
+        $ids = $req->ids;
+        if (count($ids) > 0) {
+             $file_infos = Upload::find($ids);
+            foreach($file_infos as $file_info){
+                $file_deleted = Storage::delete($file_info->storage_path);
+                $db_deleted = Upload::where('id', $file_info->id)->delete();
+            }
+            return response()->json([
+                'status'    => true,
+            ]);
+        }
+
+        return response()->json([
+            'status'    => false,
+        ]);
+       
     }
 }
