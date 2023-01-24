@@ -46,7 +46,7 @@
                         __notify('User Not found', '', 'warning')
                     }
                 }else{                    
-                    __notify('Opps Somthing went wrong', '', 'error')
+                    __notify('Opps Something went wrong', '', 'error')
                     setTimeout(()=> {
                      error.value = ''
                     }, 5000)

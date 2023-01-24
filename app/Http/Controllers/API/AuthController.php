@@ -8,7 +8,10 @@ use App\Models\User;
 use Auth;
 use Validator;
 use Laravel\Sanctum\HasApiTokens;
+use App\Mail\VerificationMail;
+use Illuminate\Support\Facades\Mail;
 
+use App\Jobs\SendMailToUser;
 
 
 class AuthController extends Controller
@@ -51,10 +54,19 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $success['token'] = $user->createToken('Login')->plainTextToken;
             $success['name'] = $user->name;
+
+                $userDataToMail = [
+                    'browserInfo'   => 'chrome',
+                    'userInfo'      => ['name' => 'Biplob Shaha', 'email' => 'devbipu@gmail.com'],
+                    'mailInfo'      => 'Login Alert mail'
+                ];
+                dispatch(new SendMailToUser($userDataToMail));
+
+
             $response = [
                 'success' => true,
                 'data' => $success,
-                'message' => 'User login successfully'
+                'message' => 'User login successfully',
             ];
             return response()->json($response, 200);
         }else{
@@ -86,6 +98,25 @@ class AuthController extends Controller
                 'from'  => 'Gest user Logout'
             ]);
         }
-        
+    }
+
+    /**
+     *  Update user
+     *  @return user data
+     */
+    public function updateUser(Request $request)
+    {
+        $id = $request->id;
+        $name = $request->name;
+        $valid = $request->validate([
+            'id'    => 'required',
+            'name'  => 'required',
+            'email' => "bail|required|email|unique:users,email, $request->id"
+        ]);
+        $user = User::find($request->id);
+
+        $status = $user->update($request->all());
+
+        return $user;
     }
 }

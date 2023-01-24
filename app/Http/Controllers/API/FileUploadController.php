@@ -51,7 +51,7 @@ class FileUploadController extends Controller
 
     public function retriveImages(Request $req)
     {
-        $allImages = Upload::whereIn('file_extesion', ['webp', 'jpg', 'png', 'jpeg', 'mp4'])
+        $allImages = Upload::whereIn('file_extesion', ['webp', 'jpg', 'png', 'svg', 'jpeg', 'mp4'])
         ->select(['id', 'view_path', 'storage_path','file_size', 'orginal_name', 'file_extesion'])->get();
 
         return response()->json([

@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<div class="my-2" v-if="images.length">
+		<div class="my-4" v-if="allImages">
 			<button class="btn btn-sm btn-danger" @click="bulkDeletes()">Delete Selected Item</button> &nbsp;
 		</div>
 		<div class="row g-3" :key="re_render">
-			<div class="col-md-3" v-for="img in images">
+			<div class="col-md-3" v-for="img in allImages">
 		        <div class="gallery_img_wrapper">
 		            <div class="gallery_tools_wrap">
 		                <div class="gallery_tools_inner">
@@ -40,20 +40,20 @@
     import { useStore } from 'vuex';
 	export default defineComponent({
 		name: "Gallery-Single",
-		props: {
-		    asyncData: {
-		      type: Object,
-		      required: true
-		    },
-		  },
 		setup(props){
 			const re_render = ref(0);
 			const store = useStore();
 			const fileIds = ref([]);
+            const allImages = ref(null);
             const gToolShow = (e) => {
                 e.target.parentNode.parentNode.parentNode.classList.toggle('show_tools');
             }
-
+            //Get images
+            const  getImages = async () => {
+                const res  = await callApi('get', '/api/getimages');
+                allImages.value = res.data.images
+            }
+            getImages();
             const deleteFile =  async (id) => {
             	const res = await callApi__CFR('post', '/api/deletefile', {fileId: id});
             	if (res.status) {
@@ -62,7 +62,6 @@
             		__notify("File Not Deleted", '', 'error')
             	}
             }
-
             //Bulk delete
             const bulkDeletes = async () => {
             	const res = await callApi__CFR('post', '/api/bulkdeletes', {ids: fileIds.value});
@@ -74,11 +73,11 @@
             };
             return {
             	gToolShow,
+            	allImages,
             	deleteFile,
             	re_render,
             	fileIds,
             	bulkDeletes,
-            	images: props.asyncData,
             }
 		}
 	});

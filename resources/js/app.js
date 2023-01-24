@@ -13,6 +13,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 //Mixins
 import GlobalMethods from './common.js'
 
+// Vue Localization 
+import { i18nVue } from 'laravel-vue-i18n'
 
 const vueApp = createApp(App)
 
@@ -29,5 +31,10 @@ vueApp.use(VueSweetalert2)
 vueApp.mixin(GlobalMethods);
 vueApp.use(router);
 vueApp.use(store);
+vueApp.use(i18nVue, {
+	resolve: async lang => {
+        const langs = import.meta.glob('../../lang/*.json');
+        return await langs[`../../lang/${lang}.json`]();
+    }
+})
 vueApp.mount("#app")
-
