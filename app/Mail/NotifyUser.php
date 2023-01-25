@@ -8,21 +8,21 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
-class VerificationMail extends Mailable
+class NotifyUser extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $userDataToMail;
-
+    public $data;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($userDataToMail)
+    public function __construct($data=null)
     {
-        $this->userDataToMail = $userDataToMail;
+        $this->data = $data;
     }
 
     /**
@@ -33,7 +33,8 @@ class VerificationMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: $this->userDataToMail['mailInfo'],
+            from: new Address('wszdev3@gmail.com', 'devbipu'),
+            subject: $this->data['mailInfo'],
         );
     }
 

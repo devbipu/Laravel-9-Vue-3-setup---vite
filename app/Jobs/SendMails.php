@@ -8,27 +8,27 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\VerificationMail;
+use Illuminate\Support\Facades\Log;
+
+use App\Mail\NotifyUser;
 use Illuminate\Support\Facades\Mail;
 
-class SendMailToUser implements ShouldQueue
+
+
+class SendMails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Data to be send 
-     * @return 0
-     */
-    public $datas;
-
+    public $data;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($datas)
+    public function __construct($data = null)
     {
-        $this->datas = $datas; 
+        $this->data = $data;
+        //Log::info("mailSended jobs log");
     }
 
     /**
@@ -36,10 +36,8 @@ class SendMailToUser implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle($data)
     {
-        //execute the job works 
-        
-        $userNotify = Mail::to('devbipu@gmail.com')->queue(new VerificationMail($this->datas));
+        //Queue work here 
     }
 }

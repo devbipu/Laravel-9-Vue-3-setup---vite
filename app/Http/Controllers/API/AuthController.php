@@ -56,11 +56,12 @@ class AuthController extends Controller
             $success['name'] = $user->name;
 
                 $userDataToMail = [
-                    'browserInfo'   => 'chrome',
+                    'browserInfo'   => $request->header('User-Agent'),
+                    'loginIP'       => $request->ip(),
                     'userInfo'      => ['name' => 'Biplob Shaha', 'email' => 'devbipu@gmail.com'],
                     'mailInfo'      => 'Login Alert mail'
                 ];
-                dispatch(new SendMailToUser($userDataToMail));
+                //dispatch(new SendMailToUser($userDataToMail));
 
 
             $response = [

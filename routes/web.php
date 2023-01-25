@@ -6,6 +6,11 @@ use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\URL;
 // use App\Jobs\SendMailToUser;
 
+use App\Mail\NotifyUser;
+use Illuminate\Support\Facades\Mail;
+
+use App\Jobs\SendMails;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,24 +22,18 @@ use Illuminate\Support\Facades\URL;
 |
 */
 
-
-
-
-
-
-Route::get('/sendmail', function(){
-	$userDataToMail = [
-        'browserInfo'   => 'chrome',
+Route::get('/sendsms', function(Request $request){
+    $userDataToMail = [
+        'browserInfo'   => $request->header('User-Agent'),
+        'loginIP'       => $request->ip(),
         'userInfo'      => ['name' => 'Biplob Shaha', 'email' => 'devbipu@gmail.com'],
         'mailInfo'      => 'Login Alert mail'
     ];
-	dispatch(new App\Jobs\SendMailToUser($userDataToMail));
-	dd("success");
+    $sendRes = Mail::to($userDataToMail['userInfo']['email'])->queue(new NotifyUser($userDataToMail));
+    if ($sendRes) {
+        return "SUCCESS";
+    }
 });
-
-
 
 // Route::get('/', [FrontController::class, 'index']);
 Route::get('/{any}', [FrontController::class, 'index'])->where('any', '.*');
-
-// Route::get('/', [FrontController::class, 'showview']);
