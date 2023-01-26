@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-
+import { __getCookieByName } from '@/composables'
 
 
 
@@ -7,7 +7,7 @@ const store = createStore({
 	state: {
 		isLoading: false,
 		componentKey: 0,
-		token : localStorage.getItem('token') || 0,
+		token : __getCookieByName('apitoken') || null,
 		user: localStorage.getItem('user') || null,
 	},
 
@@ -23,6 +23,9 @@ const store = createStore({
 		},
 		updateComponentKey(state, payload){
 			state.componentKey += payload;
+		},
+		updateCookieToken(state, payload){
+			state.cookie_token = payload; 
 		}
 	},
 
@@ -32,7 +35,8 @@ const store = createStore({
 		},
 
 		setToken(context, payload){
-			localStorage.setItem('token', payload);
+			// localStorage.setItem('token', payload);
+			__setCookie('apitoen', payload, "120MIN");
 			context.commit('updateToken', payload);
 		},
 		removeToken(context){
@@ -50,6 +54,9 @@ const store = createStore({
 		},
 		setupComponentKey(context, payload){
 			context.commit('updateComponentKey', payload);
+		},
+		setCookieToken(context, payload){
+			context.commit('updateCookieToken', payload);
 		}
 	},
 
@@ -65,6 +72,9 @@ const store = createStore({
 		},
 		getCompKey(state){
 			return state.componentKey;
+		},
+		getCookieToken(state){
+			return state.cookie_token;
 		}
 	}
 });

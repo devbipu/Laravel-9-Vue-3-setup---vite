@@ -1,5 +1,9 @@
 import store from '@/store'
 import Swal from 'sweetalert2'
+import { useCookies } from "vue3-cookies";
+const { cookies  } = useCookies();
+
+
 export async function callApi(method, url, data){
 	store.dispatch('setLoading', true)
 	try{
@@ -60,4 +64,13 @@ export function __notify(title='',  desc='', type='success'){
 			toast.addEventListener('mouseleave', Swal.resumeTimer)
 		}
 	})
+}
+
+
+export function __getCookieByName(name){
+	return cookies.get(name); //Accept token name and return data if exits 
+}
+export function __setCookie(data, expire){
+	cookies.set('apitoken', data, '1MIN'); //token, ksfskdf2445, 1MIN
+	return "success";
 }

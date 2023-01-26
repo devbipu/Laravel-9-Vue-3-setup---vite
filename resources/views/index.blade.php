@@ -20,6 +20,7 @@
         </script>
     </head>
     <body>
+        {{Auth::user()}}
         <main id="app">
         </main>
 

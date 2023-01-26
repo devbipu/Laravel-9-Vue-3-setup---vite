@@ -15,6 +15,8 @@ import GlobalMethods from './common.js'
 
 // Vue Localization 
 import { i18nVue } from 'laravel-vue-i18n'
+// import VueCookies from 'vue3-cookies'
+
 
 const vueApp = createApp(App)
 
@@ -31,6 +33,7 @@ vueApp.use(VueSweetalert2)
 vueApp.mixin(GlobalMethods);
 vueApp.use(router);
 vueApp.use(store);
+// vueApp.use(VueCookies);
 vueApp.use(i18nVue, {
 	resolve: async lang => {
         const langs = import.meta.glob('../../lang/*.json');

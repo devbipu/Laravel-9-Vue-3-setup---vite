@@ -37,7 +37,7 @@
 	import { ref, reactive } from 'vue';
 	import { useStore } from 'vuex';
     import { useRouter } from "vue-router";
-    import { callApi, callApi__CFR, __notify,  } from '@/composables';
+    import { callApi, callApi__CFR, __notify } from '@/composables';
     import EditProfileModal from '@/components/utilities/EditProfile.vue';
 	export default{
 		name: "ProfileCard",

@@ -19,7 +19,7 @@ class AuthController extends Controller
 {
     use HasApiTokens;
     public function register(Request $req)
-    {    
+    {
         $validator = Validator::make($req->all(), [
             'name'  => 'required',
             'email' => 'required|email|unique:users,email',
@@ -56,15 +56,7 @@ class AuthController extends Controller
             $success['token'] = $user->createToken('Login')->plainTextToken;
             $success['name'] = $user->name;
 
-                $userDataToMail = [
-                    'browserInfo'   => $request->header('User-Agent'),
-                    'loginIP'       => $request->ip(),
-                    'userInfo'      => ['name' => 'Biplob Shaha', 'email' => 'devbipu@gmail.com'],
-                    'mailInfo'      => 'Login Alert mail'
-                ];
-                //dispatch(new SendMailToUser($userDataToMail));
-
-
+           
             $response = [
                 'success' => true,
                 'data' => $success,
