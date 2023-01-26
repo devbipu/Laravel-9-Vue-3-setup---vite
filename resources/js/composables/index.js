@@ -53,6 +53,11 @@ export function __notify(title='',  desc='', type='success'){
 		icon: type,
 		title: title,
 		text: desc,
-		position: 'top-end'
+		timerProgressBar: true,
+		position: 'top-end',
+		didOpen: (toast) => {
+			toast.addEventListener('mouseenter', Swal.stopTimer)
+			toast.addEventListener('mouseleave', Swal.resumeTimer)
+		}
 	})
 }

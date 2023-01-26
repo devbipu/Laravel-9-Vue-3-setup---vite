@@ -10,8 +10,9 @@ use Validator;
 use Laravel\Sanctum\HasApiTokens;
 use App\Mail\VerificationMail;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendMailToUser;
+use App\Mail\NotifyUser;
 
 
 class AuthController extends Controller
@@ -119,5 +120,48 @@ class AuthController extends Controller
         $status = $user->update($request->all());
 
         return $user;
+    }
+
+
+    /**
+     * Verify OTP Before Change password
+     * @return boolean    
+     */
+
+    public function verifyEmail(Request $request)
+    {
+
+        $genOTP = substr(str_shuffle("0123456789"), 0, 5);
+        // return $genOTP;
+        $saveOTP = User::find(Auth::id())->update([
+            'verify_otp' => $genOTP
+        ]); 
+        $mailData = [
+            'userInfo'  => Auth::user(),
+            'otpCode'  => $genOTP,
+        ];
+
+        $sendEmail = Mail::to($mailData['userInfo']['email'])->queue(new NotifyUser($mailData));
+    }
+
+    /**
+     * Update user password
+     * @return user data
+     */
+
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password'  => 'required|min:4',
+            'c_password'    => 'required|same:password'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['success' => false]);
+        }
+
+        $update = Auth::user()->update([
+            'password' => Hash::make($request->password)
+        ]);
+        return response()->json(['success' => true, 'resutl' => $update ]);
     }
 }

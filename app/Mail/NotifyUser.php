@@ -34,7 +34,7 @@ class NotifyUser extends Mailable implements ShouldQueue
     {
         return new Envelope(
             from: new Address('wszdev3@gmail.com', 'devbipu'),
-            subject: $this->data['mailInfo'],
+            subject: "Password Change OTP",
         );
     }
 

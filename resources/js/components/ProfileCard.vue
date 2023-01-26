@@ -16,13 +16,16 @@
             <div class="card_profile_img" :style="`background-image:url(${user.avatar ? user.avatar.view_path : null})`"></div>
             <div class="user_details">
                 <form class="form-group user_edit" @submit.prevent="editSubmit($event)">
-                    <input type="text" class="form-control" name="name" :value="user.name">
-                    <input type="text" class="form-control" name="email" :value="user.email">
-                    <input type="submit" value="Save" class="btn btn-outline-primary btn-sm">
+                    <input type="text" class="form-control my-1" name="name" :value="user.name">
+                    <input type="text" class="form-control my-1" name="email" :value="user.email">
+                    <input type="submit" value="Save" class="btn btn-outline-primary btn-sm px-3"> &nbsp &nbsp
+                    <button type="button" class="btn btn-sm btn-outline-secondary ml-1" @click="showPasswordEditModal()">Change Password</button>
                 </form>
             </div>
         </div>
-
+        <div>
+            <EditProfileModal />
+        </div>
 		<div class="card_count">
 			<!-- User Meta Data -->
 			<div class="btn_cs" @click="logout()">Logout</div>
@@ -34,9 +37,13 @@
 	import { ref, reactive } from 'vue';
 	import { useStore } from 'vuex';
     import { useRouter } from "vue-router";
-    import { callApi, callApi__CFR, __notify } from '@/composables';
+    import { callApi, callApi__CFR, __notify,  } from '@/composables';
+    import EditProfileModal from '@/components/utilities/EditProfile.vue';
 	export default{
 		name: "ProfileCard",
+        components: {
+            EditProfileModal
+        },
 		setup(){
 			const store = useStore();
             const router = useRouter();
@@ -52,7 +59,6 @@
             }
 
             const editSubmit = async(e) => {
-
                 const form = document.querySelector('.user_edit');
                 const data = Object.fromEntries(new FormData(form).entries());
                 data['id'] = user.id;
@@ -62,11 +68,30 @@
                     __notify("Update Successfull")
                 }
             } 
+            const showEmailVerify = () => {
+                const modalDiv = document.querySelector('#emailVeifryModal');
+                const myModal = new bootstrap.Modal(modalDiv)
+                myModal.show();
+            };
+
+            const showPasswordEditModal = () => {
+                const modalDiv = document.querySelector('#editProfileModal');
+                const myModal = new bootstrap.Modal(modalDiv)
+                myModal.show();
+            } 
+            const hideModal = () => {
+                const modalDiv = document.querySelector('#editProfileModal');
+                const myModal = new bootstrap.Modal(modalDiv)
+                myModal.hide();
+                
+            }
             return {
             	user,
             	logout,
                 isProfileEdit,
                 editSubmit,
+                showPasswordEditModal,
+                hideModal
             }
 		}
 	}

@@ -29,6 +29,8 @@ Route::controller(AuthController::class)->group(function(){
     Route::post('login', 'login');
     Route::post('saveuserdata', 'updateUser');
     Route::post('register', 'register');
+    Route::post('updatepassword', 'updatePassword');
+    Route::get('sendotpmail', 'verifyEmail');
     Route::post('logout', 'logout');
 });
 
