@@ -2,7 +2,8 @@ import store from '@/store'
 import Swal from 'sweetalert2'
 import { useCookies } from "vue3-cookies";
 const { cookies  } = useCookies();
-
+// const appStore = useStore()
+// const token = store.getters('getToken');
 
 export async function callApi(method, url, data){
 	store.dispatch('setLoading', true)
@@ -67,10 +68,16 @@ export function __notify(title='',  desc='', type='success'){
 }
 
 
-export function __getCookieByName(name){
-	return cookies.get(name); //Accept token name and return data if exits 
+export function __getCookie(name){
+	let data = cookies.get(name); //Accept token name and return data if exits 
+	return data
 }
-export function __setCookie(data, expire){
-	cookies.set('apitoken', data, '1MIN'); //token, ksfskdf2445, 1MIN
+export function __setCookie({name = null, token, expire=null}){
+	token = store.getters.getToken != null ? store.getters.getToken : token;
+	cookies.set(name , token, expire); //token, ksfskdf2445, 1MIN
 	return "success";
+}
+
+export function __removeCookie(name){
+	cookies.remove(name);
 }

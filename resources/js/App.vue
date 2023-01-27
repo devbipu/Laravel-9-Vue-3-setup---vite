@@ -19,10 +19,10 @@
 			        <li class="nav-item">
 			        	<router-link class="nav-link" to="/about">About </router-link>
 			        </li>
-			        <li class="nav-item" v-if="$store.getters.getToken == 0 ">
+			        <li class="nav-item" v-if="$store.getters.getToken == null ">
 			        	<router-link class="nav-link" to="/login">Login</router-link>
 			        </li>
-			        <li class="nav-item" v-if="$store.getters.getToken == 0 ">
+			        <li class="nav-item" v-if="$store.getters.getToken == null ">
 			        	<router-link class="nav-link" to="/register">Register</router-link>
 			        </li>
 			        <li class="nav-item" v-else>

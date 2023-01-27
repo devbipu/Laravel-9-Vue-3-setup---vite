@@ -9,8 +9,6 @@
             <div class="col-sm-9">
                 <div class="col-sm-12 bg-light p-3 rounded shadow-sm">
                     <h4>Welcome to your dashboard</h4>
-                    <button @click="setCookie()">Set Cookie</button>
-                    <button @click="getToken()">Get Cookie</button>
                     <div class="my-3">
                         <FileUploader />
                     </div>
@@ -27,12 +25,10 @@
     import { ref, reactive, defineComponent } from 'vue';
     import { useRouter } from "vue-router"
     import { useStore } from "vuex"
-    import { callApi, __notify, __getCookieByName, __setCookie } from '@/composables'
+    import { callApi, __notify } from '@/composables'
     import GalleryColumn from '@/components/GalleryColumn.vue'
     import ProfileCard from '@/components/ProfileCard.vue';
     import FileUploader from '@/components/FileUploader.vue';
-
-    import { useCookies } from "vue3-cookies";
 
 	export default defineComponent({
         components: {
@@ -44,22 +40,11 @@
             const router = useRouter();
             const store = useStore();
             const user = reactive(JSON.parse(store.getters.getUser));
-            const { cookies  } = useCookies();
 
-            console.log(cookies.get('testtoken'));
-
-            const setCookie = () => {
-                //cookies.set('testtoken', 'tokenvaluenew1', '120MIN');
-                __setCookie('tokenvaluenew1', '1MIN')
-            }
-
-            const getToken = () => {
-                console.log(__getCookieByName('testtoken'));
-            }
 
             // return of components
 			return{
-                user, setCookie, getToken
+                user,
 			}
 		}
 	});

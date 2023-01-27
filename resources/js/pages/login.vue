@@ -39,10 +39,8 @@
                     const userReq = await callApi('get','/api/user')
                     if(userReq.status == 200){
                         __notify('Login Successfull', '', 'success')
-
-                        document.cookie = `token=${res.data.data.token}; path=http://127.0.0.1:8000`
-
-                        store.dispatch('setToken', res.data.data.token);
+                        console.log(res.data);
+                        store.dispatch('setToken', res.data.data);
                         store.dispatch('setUser',  JSON.stringify(userReq.data));
                         router.push({name:'Dashboard'})
                     }else{

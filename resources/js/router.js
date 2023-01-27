@@ -68,13 +68,13 @@ const router = createRouter({
 
 
 router.beforeEach((to, from) => {
-    if (to.meta.requireAuth == true && store.getters.getToken == 0) {
+    if (to.meta.requireAuth == true && store.getters.getToken == null) {
         __notify('Opps', 'Don\'t Have Enaugh Access', 'error')
         return {
             name: 'Login'
         }
     }
-    if(to.meta.requireAuth == false && store.getters.getToken != 0) {
+    if(to.meta.requireAuth == false && store.getters.getToken != null) {
         return {
             name: 'Dashbaord'
         }

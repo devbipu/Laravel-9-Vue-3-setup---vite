@@ -55,6 +55,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $success['token'] = $user->createToken('Login')->plainTextToken;
             $success['name'] = $user->name;
+            $success['session'] = env('SESSION_LIFETIME');
 
            
             $response = [
