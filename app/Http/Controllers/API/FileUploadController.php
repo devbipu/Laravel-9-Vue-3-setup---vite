@@ -14,7 +14,7 @@ class FileUploadController extends Controller
     public function uploadFile(Request $req)
     {
         $file = $req->file('img');
-        $formatedName = preg_replace('/\s+|[^A-Za-z0-9 ]/', '_', $file->getClientOriginalName());
+        $formatedName = preg_replace('/\s+|[^A-Za-z0-9\. ]/', '_', $file->getClientOriginalName());
         $fName = time().'_'.$formatedName;
         $upPath = "image/".date('Y')."/".date('m');
         $store = $file->storeAs("public/".$upPath, $fName);
@@ -101,6 +101,18 @@ class FileUploadController extends Controller
         return response()->json([
             'status'    => false,
         ]);
-       
+    }
+
+    /**
+     * Accept file id as int
+     * @return file download url as json response 
+     */
+    public function downloadFile(Request $req, $id)
+    {
+        
+        $filePath =  Upload::where('id', $id)->select('storage_path')->first();
+        // return $filePath->storage_path;
+        $downLink = Storage::download($filePath->storage_path);
+        return response()->json(['downloadLink' => $downLink]);
     }
 }

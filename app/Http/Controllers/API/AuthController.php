@@ -124,7 +124,7 @@ class AuthController extends Controller
     public function verifyEmail(Request $request)
     {
 
-        $genOTP = substr(str_shuffle("0123456789"), 0, 5);
+        $genOTP = substr(str_shuffle("123456789"), 0, 5);
         // return $genOTP;
         $saveOTP = User::find(Auth::id())->update([
             'verify_otp' => $genOTP
@@ -144,17 +144,28 @@ class AuthController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'password'  => 'required|min:4',
-            'c_password'    => 'required|same:password'
+
+
+        $validated = $request->validate([
+            'password'      => 'required|min:4',
+            'c_password'    => 'required|same:password',
+            'verify_otp'    => 'required|min:5'
         ]);
-        if ($validator->fails()) {
-            return response()->json(['success' => false]);
+
+        if (!$validated) {
+            return response()->json(['success' => true]);
         }
 
-        $update = Auth::user()->update([
-            'password' => Hash::make($request->password)
-        ]);
-        return response()->json(['success' => true, 'resutl' => $update ]);
+        $otp_code = Auth::user()->select('verify_otp')->first();
+        if ($otp_code->verify_otp === $request->verify_otp) {
+            $update = Auth::user()->update([
+                'password' => Hash::make($request->password),
+                'verify_otp'    => null,
+            ]);
+            return response()->json(['success' => true, 'result' => $update ]);
+        }else{
+            return response()->json(['success' => false, 'result' => null ]);
+        }
+        
     }
 }

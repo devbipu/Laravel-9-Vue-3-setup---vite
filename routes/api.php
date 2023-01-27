@@ -38,5 +38,6 @@ Route::controller(FileUploadController::class)->group( function(){
     Route::get('/getimages', 'retriveImages');
     Route::post('/imgupload', 'uploadFile');
     Route::post('/deletefile', 'deleteFile');
+    Route::get('/filedownload/{id}', 'downloadFile');
     Route::post('/bulkdeletes', 'bulkDeleteFile');
 });

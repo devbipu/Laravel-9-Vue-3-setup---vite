@@ -12,7 +12,7 @@ const routes = [
         name: 'about',
         component: () => import('@/pages/about.vue'),
         meta: {
-            requireAuth: true,
+            requireAuth: false,
             permission: {
                 read: true,
             }
@@ -55,6 +55,11 @@ const routes = [
                 delete: true,
             }
         }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: "NotFound",
+        component: () => import('@/pages/notfound.vue'),
     },
 ];
 

@@ -19,14 +19,7 @@
             })();
         </script>
     </head>
-    <body>
-        @auth
-        {{Auth::user()}}
-        @endauth
-        
-        @guest
-            <h3>guest user </h3>
-        @endguest
+    <body>        
         <main id="app">
         </main>
 

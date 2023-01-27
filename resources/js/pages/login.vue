@@ -39,7 +39,6 @@
                     const userReq = await callApi('get','/api/user')
                     if(userReq.status == 200){
                         __notify('Login Successfull', '', 'success')
-                        console.log(res.data);
                         store.dispatch('setToken', res.data.data);
                         store.dispatch('setUser',  JSON.stringify(userReq.data));
                         router.push({name:'Dashboard'})

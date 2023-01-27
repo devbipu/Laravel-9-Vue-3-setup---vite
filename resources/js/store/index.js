@@ -9,6 +9,7 @@ const store = createStore({
 		componentKey: 0,
 		token : __getCookie('apitoken') || null,
 		user: localStorage.getItem('user') || null,
+		tempPassForChange: null,
 	},
 
 	mutations: {
@@ -24,8 +25,8 @@ const store = createStore({
 		updateComponentKey(state, payload){
 			state.componentKey += payload;
 		},
-		updateCookieToken(state, payload){
-			state.cookie_token = payload; 
+		updateTempPass(state, payload){
+			state.tempPassForChange = payload;
 		}
 	},
 
@@ -36,7 +37,6 @@ const store = createStore({
 
 		setToken(context, payload){
 			// localStorage.setItem('token', payload);
-			console.log(payload);
 			__setCookie({name:'apitoken', token: payload.token, expire: `${payload.session}MIN`});
 			context.commit('updateToken', payload);
 		},
@@ -44,7 +44,6 @@ const store = createStore({
 			__removeCookie('apitoken');
 			context.commit('updateToken', null);
 		},
-
 		setUser(context, payload){
 			localStorage.setItem('user', payload);
 			context.commit('updateUser', payload);
@@ -56,8 +55,8 @@ const store = createStore({
 		setupComponentKey(context, payload){
 			context.commit('updateComponentKey', payload);
 		},
-		setCookieToken(context, payload){
-			context.commit('updateCookieToken', payload);
+		setTempPassForChange(context, payload){
+			context.commit('updateTempPass', payload);
 		}
 	},
 
@@ -74,8 +73,8 @@ const store = createStore({
 		getCompKey(state){
 			return state.componentKey;
 		},
-		getCookieToken(state){
-			return state.token;
+		getTempPassForChange(state){
+			return state.tempPassForChange;
 		}
 	}
 });

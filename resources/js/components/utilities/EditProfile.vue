@@ -10,8 +10,8 @@
 			      </div>
 			      <div class="modal-body">
 			        <!-- <form class="form-group user_edit" @submit.prevent="editSubmit($event)"> -->
-		                <input type="text" class="form-control my-1" name="password" placeholder="Password" value="">
-		                <input type="text" class="form-control my-1" name="c_password" placeholder="Password Again" value="">
+		                <input type="text" class="form-control my-1" name="password" placeholder="Password" value="" required>
+		                <input type="text" class="form-control my-1" name="c_password" placeholder="Password Again" value="" required>
 		            <!-- </form> -->
 			      </div>
 			      <div class="modal-footer">
@@ -39,6 +39,7 @@
 		},
 		setup(){
 			//
+			const store = useStore();
 			const showEmailVerify = () => {
 				const modalDiv = document.querySelector('#emailVeifryModal');
                 const myModal = new bootstrap.Modal(modalDiv)
@@ -47,21 +48,9 @@
 
 			const editPassword = async () => {
 				const passowrds = Object.fromEntries(new FormData(document.querySelector('.user_password_change')).entries());
-				//const req = await callApi('post', '/api/updatepassword', passowrds);
-				// if (req.status == 200) {
-				// 	sendVerifyCode();
-				// 	showEmailVerify();
-				// 	console.log(req);
-				// }else{
-				// 	console.log(req);
-				// }
-				sendVerifyCode();
-				showEmailVerify();
-			}
-
-			const sendVerifyCode = async() => {
+				store.dispatch('setTempPassForChange', passowrds);
 				const req = await callApi('get', '/api/sendotpmail');
-				console.log(req);
+				showEmailVerify();
 			}
 
 			return {

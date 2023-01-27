@@ -11,11 +11,11 @@
 		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		      </div>
 		      <div class="modal-body">
-	                <input type="text" class="form-control my-1" name="otp_code" placeholder="Your OTP Code" value="">
+	                <input v-model.number="clietOptCode" type="number" class="form-control my-1" placeholder="Your OTP Code">
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-		        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" @click="showEmailVerify();">Save Password</button>
+		        <button type="submit" class="btn btn-primary"  data-bs-dismiss="modal" @click="showEmailVerify();">Save Password</button>
 		      </div>
 		    </div>
 	    </form>
@@ -24,21 +24,35 @@
 </template>
 
 <script>
-	export default{ 
+	import { ref } from 'vue';
+	import { useStore } from "vuex";
+    import { callApi, __notify } from '@/composables'
+ 	export default{ 
 		name: "Edit Profile Modal",
 		setup(){
-			//
-			const showEmailVerify = () => {
-				const modalDiv = document.querySelector('#emailVeifryModal');
-                const myModal = new bootstrap.Modal(modalDiv)
-                myModal.dispose();
+			const store = useStore();
+			const clietOptCode = ref(Number); 
+			const showEmailVerify = async() => {
+				console.log(typeof clietOptCode.value);
+				let datas = store.getters.getTempPassForChange;
+				datas['verify_otp'] = clietOptCode.value;
+				const req = await callApi('post', '/api/updatepassword', datas);
+				if (req.data.success) {
+					__notify("Password Change Successfully")
+				}else{
+					__notify('Opps', 'Password Not Changed', 'error');
+				}
+				// const modalDiv = document.querySelector('#emailVeifryModal');
+                //const myModal = new bootstrap.Modal(modalDiv)
+                // myModal.dispose();
 			};
 			const editPassword = () => {
 				console.log("closed");
 			}
 			return {
 				showEmailVerify,
-				editPassword
+				editPassword,
+				clietOptCode
 			}
 		}
 	}

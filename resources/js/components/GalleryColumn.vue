@@ -15,10 +15,10 @@
 		                </div>
 		                <div class="tools">
 		                    <div class="list-group">
-		                        <button type="button" class="list-group-item list-group-item-action">Info</button>
+		                        <button type="button" class="list-group-item list-group-item-action d-none">Info</button>
 		                        <button type="button" class="list-group-item list-group-item-action" @click="deleteFile(img.id)">Delete</button>
-		                        <button type="button" class="list-group-item list-group-item-action">Download</button>
-		                        <button type="button" class="list-group-item list-group-item-action">Copy Link</button>
+		                        <a :href="img.view_path" class="list-group-item list-group-item-action" download>Download</a>
+		                        <button type="button" class="list-group-item list-group-item-action" @click="copyImgLink(img.view_path)">Copy Link</button>
 		                    </div>
 		                </div>
 		            </div>
@@ -38,6 +38,7 @@
 	import { ref, computed, defineComponent } from 'vue';
 	import { callApi, callApi__CFR, __notify  } from '@/composables';
     import { useStore } from 'vuex';
+    import { useClipboard } from '@vueuse/core'
 	export default defineComponent({
 		name: "Gallery-Single",
 		setup(props){
@@ -71,6 +72,27 @@
             		__notify("File Not Deleted", '', 'error')
             	}
             };
+
+            //Download Images
+            const downReq = async(event, id) => {
+                const req = await callApi('get', `/api/filedownload/${id}`);
+                if (req.status == 200) {
+                    console.log(req.data);
+                    const url = window.URL.createObjectURL(new Blob([req.data.downloadLink]));
+                      const link = document.createElement('a');
+                      link.href = req.data.downloadLink;
+                      link.setAttribute('download', req.data.downloadLink);
+                      document.body.appendChild(link);
+                      link.click();
+                }
+            }
+
+            const copyImgLink = (url) => {
+                navigator.clipboard.writeText(window.location.host + url)
+                __notify("Link Copyed");
+            }
+            // const source = ref()
+
             return {
             	gToolShow,
             	allImages,
@@ -78,6 +100,8 @@
             	re_render,
             	fileIds,
             	bulkDeletes,
+                downReq,
+                copyImgLink
             }
 		}
 	});
